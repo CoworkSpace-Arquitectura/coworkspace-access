@@ -7,14 +7,14 @@
 POST {{membershipUrl}}/members
 Content-Type: application/json
 
-{ "name": "Ana Pérez", "email": "ana200@example.com" }
+{ "name": "Ana Pérez", "email": "ana-prod2@example.com" }
 
 ### 2. Crear un plan (en Membership)
 # @name plan
 POST {{membershipUrl}}/plans
 Content-Type: application/json
 
-{ "name": "Escritorio dedicado 2", "price": 600000, "resourceAccess": ["DESK", "ROOM"] }
+{ "name": "Plan Prod", "price": 600000, "resourceAccess": ["DESK", "ROOM"] }
 
 ### 3. Suscribir al miembro (en Membership)
 # @name suscripcion

@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AccessCredential {
+  id             String   @id @default(uuid())
+  memberId       String   @map("member_id")
+  credentialHash String   @unique @map("credential_hash")
+  isActive       Boolean  @default(true) @map("is_active")
+  issuedAt       DateTime @default(now()) @map("issued_at")
+  expiresAt      DateTime @map("expires_at")
+  revokedReason  String?  @map("revoked_reason")
+
+  @@index([memberId, isActive])
+  @@map("access_credentials")
+}
+
+model AccessLog {
+  id         String   @id @default(uuid())
+  memberId   String?  @map("member_id")
+  locationId String   @map("location_id")
+  timestamp  DateTime @default(now())
+  granted    Boolean
+  reason     String
+
+  @@index([locationId, timestamp])
+  @@map("access_log")
+}

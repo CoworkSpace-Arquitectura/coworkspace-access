@@ -1,0 +1,55 @@
+@membershipUrl = http://localhost:3002
+@accessUrl = http://localhost:3003
+@sedeId = 11111111-1111-4111-8111-111111111111
+
+### 1. Crear un miembro (en Membership)
+# @name miembro
+POST {{membershipUrl}}/members
+Content-Type: application/json
+
+{ "name": "Ana Pérez", "email": "ana200@example.com" }
+
+### 2. Crear un plan (en Membership)
+# @name plan
+POST {{membershipUrl}}/plans
+Content-Type: application/json
+
+{ "name": "Escritorio dedicado 2", "price": 600000, "resourceAccess": ["DESK", "ROOM"] }
+
+### 3. Suscribir al miembro (en Membership)
+# @name suscripcion
+POST {{membershipUrl}}/subscriptions
+Content-Type: application/json
+
+{ "memberId": "{{miembro.response.body.id}}", "planId": "{{plan.response.body.id}}" }
+
+### 4. Pedir la credencial QR (Access Control consulta a Membership)
+# @name credencial
+POST {{accessUrl}}/credentials
+Content-Type: application/json
+
+{ "memberId": "{{miembro.response.body.id}}" }
+
+### 5. Validar en la puerta: debe dar granted true
+POST {{accessUrl}}/access/validate
+Content-Type: application/json
+
+{ "token": "{{credencial.response.body.token}}", "locationId": "{{sedeId}}" }
+
+### 6. Cancelar la suscripción (Membership publica membership.expired)
+PATCH {{membershipUrl}}/subscriptions/{{suscripcion.response.body.id}}/cancel
+
+### 7. Validar otra vez: debe dar granted false, CREDENTIAL_REVOKED
+POST {{accessUrl}}/access/validate
+Content-Type: application/json
+
+{ "token": "{{credencial.response.body.token}}", "locationId": "{{sedeId}}" }
+
+### 8. Pedir una credencial nueva: debe fallar con 403 (ya no tiene membresía)
+POST {{accessUrl}}/credentials
+Content-Type: application/json
+
+{ "memberId": "{{miembro.response.body.id}}" }
+
+### 9. Ver el historial de accesos
+GET {{accessUrl}}/access/logs?memberId={{miembro.response.body.id}}

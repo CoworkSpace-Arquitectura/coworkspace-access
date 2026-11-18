@@ -57,4 +57,10 @@ describe('Control de acceso (integración con la base de datos)', () => {
       .expect(200);
     expect(res.body).toMatchObject({ granted: false, reason: 'CREDENTIAL_REVOKED' });
   });
+
+  it('publica la documentación de la API (OpenAPI)', async () => {
+    const res = await request(app.getHttpServer()).get('/docs-json').expect(200);
+    expect(res.body.openapi).toBeDefined();
+    expect(Object.keys(res.body.paths).length).toBeGreaterThan(0);
+  });
 });

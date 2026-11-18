@@ -7,3 +7,8 @@ Microservicio de control de acceso físico. Emite credenciales QR de corta durac
 - **Endpoints:** `/credentials`, `/access/validate`, `/access/logs`
 - **Puerto local:** 3003
 - **Depende de:** Membership Service (REST) y Redis (eventos)
+
+## Documentación de la API
+
+- Swagger UI desplegado: https://coworkspace-access.onrender.com/docs
+- En local: http://localhost:<PUERTO>/docs (el JSON OpenAPI está en `/docs-json`).
